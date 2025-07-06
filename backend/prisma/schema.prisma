@@ -1,0 +1,433 @@
+// 🔧 Prisma Schema for LuxCore with NovaSanctum Security Integration
+// 
+// This schema defines the database structure for:
+// - User management with NovaSanctum security
+// - Role-based access control (RBAC)
+// - Session management
+// - Audit logging
+// - Security monitoring
+//
+// @author LuxCore Team
+// @version 1.0.0
+// @since 2024-07-05
+
+// 📋 Database configuration
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 👤 User model with NovaSanctum security features
+model User {
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  username              String    @unique
+  password              String
+  firstName             String?
+  lastName              String?
+  avatar                String?
+  isActive              Boolean   @default(true)
+  isLocked              Boolean   @default(false)
+  lockedUntil           DateTime?
+  failedLoginAttempts   Int       @default(0)
+  lastLoginAt           DateTime?
+  emailVerified         Boolean   @default(false)
+  emailVerificationToken String?
+  passwordResetToken    String?
+  passwordResetExpires  DateTime?
+  twoFactorEnabled      Boolean   @default(false)
+  twoFactorSecret       String?
+  twoFactorBackupCodes  String[]  @default([])
+  preferences           Json?     @default("{}")
+  metadata              Json?     @default("{}")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // 🔗 Relationships
+  roles                 UserRole[]
+  sessions              Session[]
+  auditLogs             AuditLog[]
+  refreshTokens         RefreshToken[]
+
+  // 📋 Indexes for performance
+  @@index([email])
+  @@index([username])
+  @@index([isActive])
+  @@index([isLocked])
+  @@index([createdAt])
+  @@index([lastLoginAt])
+  @@index([userId, isActive], name: "user_sessions")
+  @@index([token, isRevoked], name: "refresh_tokens_active")
+  @@index([userId, timestamp], name: "user_audit_logs")
+  @@index([eventType, timestamp], name: "security_events_type_time")
+  @@index([key, windowStart], name: "rate_limits_key_window")
+  @@index([token, expiresAt], name: "blacklisted_tokens_expiry")
+  @@map("users")
+}
+
+// 🎭 Role model for RBAC
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  isSystem    Boolean  @default(false)
+  metadata    Json?    @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 🔗 Relationships
+  users       UserRole[]
+  permissions RolePermission[]
+
+  // 📋 Indexes
+  @@index([name])
+  @@index([isActive])
+  @@map("roles")
+}
+
+// 🔐 Permission model for granular access control
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  resource    String   // e.g., "user", "post", "comment"
+  action      String   // e.g., "create", "read", "update", "delete"
+  isActive    Boolean  @default(true)
+  isSystem    Boolean  @default(false)
+  metadata    Json?    @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 🔗 Relationships
+  roles       RolePermission[]
+
+  // 📋 Indexes
+  @@index([name])
+  @@index([resource, action])
+  @@index([isActive])
+  @@map("permissions")
+}
+
+// 🔗 User-Role many-to-many relationship
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  assignedBy String?
+  assignedAt DateTime @default(now())
+  expiresAt  DateTime?
+  isActive   Boolean  @default(true)
+  metadata   Json?    @default("{}")
+
+  // 🔗 Relationships
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  // 📋 Constraints and indexes
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@index([isActive])
+  @@map("user_roles")
+}
+
+// 🔗 Role-Permission many-to-many relationship
+model RolePermission {
+  id           String   @id @default(cuid())
+  roleId       String
+  permissionId String
+  grantedBy    String?
+  grantedAt    DateTime @default(now())
+  expiresAt    DateTime?
+  isActive     Boolean  @default(true)
+  metadata     Json?    @default("{}")
+
+  // 🔗 Relationships
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  // 📋 Constraints and indexes
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@index([isActive])
+  @@map("role_permissions")
+}
+
+// 📝 Session model for NovaSanctum session management
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  ipAddress    String?
+  userAgent    String?
+  isActive     Boolean  @default(true)
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // 🔗 Relationships
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 📋 Indexes
+  @@index([userId])
+  @@index([token])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([deviceId])
+  @@index([location])
+  @@index([lastActivity])
+  @@map("sessions")
+}
+
+// 🔄 Refresh token model for token management
+model RefreshToken {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  isRevoked    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  // 🔗 Relationships
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 📋 Indexes
+  @@index([userId])
+  @@index([token])
+  @@index([isRevoked])
+  @@index([createdAt])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+// 📋 Audit log model for security monitoring
+model AuditLog {
+  id          String      @id @default(cuid())
+  userId      String?
+  action      String
+  resource    String?
+  resourceId  String?
+  details     Json?
+  ipAddress   String?
+  userAgent   String?
+  timestamp   DateTime    @default(now())
+  severity    LogSeverity @default(INFO)
+
+  // 🔗 Relationships
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // 📋 Indexes
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([resourceId])
+  @@index([timestamp])
+  @@index([ipAddress])
+  @@index([userAgent])
+  @@index([severity])
+  @@map("audit_logs")
+}
+
+// 🔒 Security events model for advanced monitoring
+model SecurityEvent {
+  id          String           @id @default(cuid())
+  userId      String?
+  eventType   SecurityEventType
+  description String
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?
+  timestamp   DateTime         @default(now())
+  resolved    Boolean          @default(false)
+  resolvedAt  DateTime?
+  resolvedBy  String?
+
+  // 🔗 Relationships
+  user        User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // 📋 Indexes
+  @@index([userId])
+  @@index([eventType])
+  @@index([timestamp])
+  @@index([resolved])
+  @@index([ipAddress])
+  @@index([userAgent])
+  @@map("security_events")
+}
+
+// 📊 Rate limiting model for API protection
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String   // IP address or user ID
+  endpoint  String
+  count     Int      @default(1)
+  windowStart DateTime
+  windowEnd   DateTime
+  createdAt DateTime @default(now())
+
+  // 📋 Indexes
+  @@unique([key, endpoint, windowStart])
+  @@map("rate_limits")
+}
+
+// 🔐 API keys model for external integrations
+model ApiKey {
+  id          String   @id @default(cuid())
+  name        String
+  key         String   @unique // Hashed API key
+  userId      String?
+  permissions String[] // Array of permission names
+  isActive    Boolean  @default(true)
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  metadata    Json?    @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 📋 Indexes
+  @@index([key])
+  @@index([userId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("api_keys")
+}
+
+// 📧 Email templates model for notifications
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  subject     String
+  body        String   // HTML template
+  textBody    String?  // Plain text version
+  variables   String[] // Template variables
+  isActive    Boolean  @default(true)
+  metadata    Json?    @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 🔗 Relationships
+  emails      EmailLog[]
+
+  // 📋 Indexes
+  @@index([name])
+  @@index([isActive])
+  @@map("email_templates")
+}
+
+// 📧 Email logs model for tracking
+model EmailLog {
+  id          String   @id @default(cuid())
+  templateId  String?
+  recipient   String
+  subject     String
+  body        String
+  status      String   // "SENT", "FAILED", "PENDING"
+  error       String?
+  sentAt      DateTime?
+  metadata    Json?    @default("{}")
+  createdAt   DateTime @default(now())
+
+  // 🔗 Relationships
+  template    EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  // 📋 Indexes
+  @@index([recipient])
+  @@index([status])
+  @@index([sentAt])
+  @@index([createdAt])
+  @@map("email_logs")
+}
+
+// Log severity enum
+enum LogSeverity {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  CRITICAL
+}
+
+// Security event types enum
+enum SecurityEventType {
+  LOGIN_ATTEMPT
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  LOGOUT
+  PASSWORD_CHANGE
+  PASSWORD_RESET
+  ACCOUNT_LOCKED
+  ACCOUNT_UNLOCKED
+  SUSPICIOUS_ACTIVITY
+  MFA_ENABLED
+  MFA_DISABLED
+  SESSION_EXPIRED
+  TOKEN_REFRESH
+  TOKEN_REVOKED
+  RATE_LIMIT_EXCEEDED
+  INVALID_TOKEN
+  UNAUTHORIZED_ACCESS
+  DATA_ACCESS
+  DATA_MODIFICATION
+  ADMIN_ACTION
+}
+
+// System configuration with NovaSanctum
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  isEncrypted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  @@map("system_configs")
+}
+
+// Blacklisted tokens with NovaSanctum
+model BlacklistedToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  type      TokenType
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  reason    String?
+
+  @@map("blacklisted_tokens")
+}
+
+// Token types enum
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET
+  VERIFICATION
+}
+
+// User preferences with NovaSanctum
+model UserPreference {
+  id     String @id @default(cuid())
+  userId String @unique
+  theme  String @default("light")
+  language String @default("en")
+  timezone String @default("UTC")
+  notifications Json @default("{}")
+  security Json @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+} 

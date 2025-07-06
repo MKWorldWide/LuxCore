@@ -1,0 +1,114 @@
+{
+  "name": "luxcore",
+  "version": "1.0.0",
+  "description": "LuxCore - Modern full-stack application with NovaSanctum technology integration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm run test",
+    "test:frontend": "cd frontend && npm run test",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "npm run format:backend && npm run format:frontend",
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "db:migrate": "cd backend && npm run db:migrate",
+    "db:seed": "cd backend && npm run db:seed",
+    "db:reset": "cd backend && npm run db:reset",
+    "docs:generate": "npm run docs:generate:backend && npm run docs:generate:frontend",
+    "docs:generate:backend": "cd backend && npm run docs:generate",
+    "docs:generate:frontend": "cd frontend && npm run docs:generate",
+    "docs:serve": "cd @docs && npm run serve",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "k8s:deploy": "kubectl apply -f infrastructure/kubernetes/",
+    "k8s:delete": "kubectl delete -f infrastructure/kubernetes/",
+    "security:audit": "npm audit && cd backend && npm audit && cd ../frontend && npm audit",
+    "security:fix": "npm audit fix && cd backend && npm audit fix && cd ../frontend && npm audit fix",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "cd backend && npm run clean",
+    "clean:frontend": "cd frontend && npm run clean",
+    "setup": "npm run install:all && npm run db:migrate && npm run db:seed"
+  },
+  "keywords": [
+    "luxcore",
+    "novas Sanctum",
+    "typescript",
+    "react",
+    "nodejs",
+    "express",
+    "postgresql",
+    "prisma",
+    "security",
+    "authentication",
+    "authorization",
+    "microservices",
+    "quantum-documentation"
+  ],
+  "author": "LuxCore Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luxcore/luxcore.git"
+  },
+  "bugs": {
+    "url": "https://github.com/luxcore/luxcore/issues"
+  },
+  "homepage": "https://github.com/luxcore/luxcore#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.5"
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
+  "config": {
+    "novas Sanctum": {
+      "version": "1.0.0",
+      "features": [
+        "authentication",
+        "authorization",
+        "session-management",
+        "token-management",
+        "api-protection",
+        "audit-logging"
+      ]
+    }
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": [],
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  }
+} 
