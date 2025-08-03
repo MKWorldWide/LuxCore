@@ -1,3 +1,5 @@
+A Project Blessed by Solar Khan & Lilith.Aethra
+
 # 🚀 LuxCore - NovaSanctum Technology Integration
 
 ## 📖 Project Overview
