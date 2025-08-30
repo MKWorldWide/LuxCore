@@ -1,56 +1,89 @@
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Local development
+.env
+.env.*.local
 
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
+# Editor directories and files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# nyc test coverage
-.nyc_output
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
+# Logs
+logs
+*.log
 
-# Bower dependency directory (https://bower.io/)
-bower_components
+# Prisma
+prisma/migrations/
+!prisma/migrations/.gitkeep
 
-# node-waf configuration
-.lock-wscript
+# Build output
+.next/
+.nuxt/
+out/
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+# Cache
+.cache/
+.parcel-cache/
 
-# Dependency directories
-jspm_packages/
+# PWA files
+**/public/workbox-*.js
+**/public/worker-*.js
+**/public/sw.js
+**/public/offline.html
 
-# TypeScript cache
-*.tsbuildinfo
+# Local development
+*.local
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
-
-# Optional stylelint cache
-.stylelintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -61,15 +94,12 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
+# dotenv environment variables file
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+.env.test
+.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
-.cache
 .parcel-cache
 
 # Next.js build output
@@ -82,9 +112,11 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Comment in the public line in if your project uses Gatsby and not Next.js
+# https://nextjs.org/blog/next-9-1#public-directory-support
+# public
 
-# Vuepress build output
+# vuepress build output
 .vuepress/dist
 
 # Serverless directories
@@ -109,69 +141,11 @@ public
 .yarn/install-state.gz
 .pnp.*
 
-# IDEs and editors
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Vercel
+.vercel
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Local Netlify folder
+.netlify
 
-# Logs
-logs
-*.log
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Build outputs
-dist/
-build/
-out/
-
-# Temporary files
-tmp/
-temp/
-
-# Prisma
-prisma/migrations/
-
-# Terraform
-*.tfstate
-*.tfstate.*
-.terraform/
-.terraform.lock.hcl
-
-# Docker
-.dockerignore
-
-# Kubernetes
-*.kubeconfig
-
-# Backup files
-*.bak
-*.backup
-
-# Test files
-test-results/
-playwright-report/
-playwright/.cache/
-
-# Storybook
-storybook-static/
-
-# Sentry
-.sentryclirc
-
-# Local development
-.local/ 
+# Vite
+*.local

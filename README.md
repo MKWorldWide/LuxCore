@@ -1,238 +1,196 @@
-A Project Blessed by Solar Khan & Lilith.Aethra
+<div align="center">
 
-# 🚀 LuxCore - NovaSanctum Technology Integration
+# 🚀 LuxCore - Modern Full-Stack Application
 
-## 📖 Project Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.9.5-blue.svg)](https://www.typescriptlang.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-LuxCore is a modern, full-stack application built with cutting-edge technologies and integrated with NovaSanctum security technology. This project represents a complete refactor and update with quantum-level documentation and advanced security features.
+**A Project Blessed by Solar Khan & Lilith.Aethra**
 
-### 🎯 Key Features
-- **NovaSanctum Security Integration:** Advanced authentication and authorization
-- **Quantum Documentation:** AI-maintained comprehensive documentation
-- **Type-Safe Development:** Full TypeScript implementation
-- **Microservices Architecture:** Scalable and maintainable design
-- **Real-time Updates:** Live documentation synchronization
-- **Modern UI/UX:** Responsive and intuitive interface
+[![LuxCore CI](https://github.com/luxcore/luxcore/actions/workflows/ci.yml/badge.svg)](https://github.com/luxcore/luxcore/actions)
+[![codecov](https://codecov.io/gh/luxcore/luxcore/branch/main/graph/badge.svg?token=YOUR-TOKEN-HERE)](https://codecov.io/gh/luxcore/luxcore)
+[![Documentation Status](https://readthedocs.org/projects/luxcore/badge/?version=latest)](https://docs.luxcore.dev)
+
+</div>
+
+## 📖 Table of Contents
+
+- [Project Overview](#-project-overview)
+- [✨ Features](#-features)
+- [🚀 Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Development](#development)
+  - [Testing](#testing)
+- [🏗️ Architecture](#%EF%B8%8F-architecture)
+- [🔧 Project Structure](#-project-structure)
+- [📚 Documentation](#-documentation)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🙏 Acknowledgments](#-acknowledgments)
+
+## ✨ Features
+
+- **🔒 NovaSanctum Security Integration** - Advanced authentication and authorization
+- **📊 Real-time Analytics** - Monitor application performance and usage
+- **🌐 Responsive Design** - Works on desktop and mobile devices
+- **⚡ Blazing Fast** - Built with Vite for optimal performance
+- **🔍 Type Safety** - Full TypeScript implementation
+- **📱 PWA Support** - Installable on any device
+- **🔧 Developer Experience** - Comprehensive tooling and documentation
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ (LTS recommended)
+- PostgreSQL 14+
+- pnpm 8+
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/luxcore/luxcore.git
+   cd luxcore
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Update the .env file with your configuration
+   ```
+
+4. **Set up the database**
+   ```bash
+   pnpm run db:migrate
+   pnpm run db:seed
+   ```
+
+### Development
+
+Start the development servers:
+
+```bash
+# Start both frontend and backend in development mode
+pnpm run dev
+
+# Or start them separately
+pnpm run dev:frontend
+pnpm run dev:backend
+```
+
+The application will be available at:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
+- Prisma Studio: http://localhost:5555 (run `pnpm run db:studio`)
+
+### Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+pnpm test
+
+# Run frontend tests
+pnpm run test:frontend
+
+# Run backend tests
+pnpm run test:backend
+
+# Run tests with coverage
+pnpm run test:coverage
+```
 
 ## 🏗️ Architecture
 
-### Technology Stack
-- **Backend:** Node.js + Express + TypeScript
-- **Frontend:** React + TypeScript + Vite
-- **Database:** PostgreSQL + Prisma ORM
-- **Authentication:** NovaSanctum Security Layer
-- **Documentation:** Quantum-level AI-maintained docs
-- **Deployment:** Docker + Kubernetes
+LuxCore follows a modern microservices architecture with a clear separation of concerns:
 
-### Project Structure
+- **Frontend**: React 18 with TypeScript, Vite, and Tailwind CSS
+- **Backend**: Node.js with Express and TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: JWT with refresh tokens
+- **CI/CD**: GitHub Actions
+- **Containerization**: Docker + Docker Compose
+
+## 🔧 Project Structure
+
 ```
 LuxCore/
 ├── @docs/                    # Source of truth documentation
-├── @.cursor/                 # Cursor-specific documentation
 ├── backend/                  # Backend services
+│   ├── prisma/              # Database schema and migrations
 │   ├── src/
-│   │   ├── controllers/      # Request handlers
-│   │   ├── middleware/       # Express middleware
+│   │   ├── config/          # Configuration files
+│   │   ├── controllers/     # Request handlers
+│   │   ├── middleware/      # Express middleware
 │   │   ├── models/          # Data models
 │   │   ├── routes/          # API routes
 │   │   ├── services/        # Business logic
-│   │   ├── utils/           # Utility functions
-│   │   └── config/          # Configuration files
+│   │   └── utils/           # Utility functions
 │   └── tests/               # Backend tests
 ├── frontend/                # Frontend application
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── pages/          # Page components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── utils/          # Utility functions
-│   │   ├── services/       # API services
-│   │   ├── types/          # TypeScript types
-│   │   └── styles/         # Styling files
-│   └── public/             # Static assets
-├── shared/                 # Shared utilities and types
-├── infrastructure/         # DevOps and deployment
-└── scripts/               # Build and utility scripts
-```
-
-## 🚀 NovaSanctum Technology Integration
-
-### Security Features
-- **Advanced Authentication:** Multi-factor authentication support
-- **Role-Based Access Control:** Granular permissions system
-- **Session Management:** Secure session handling
-- **Token Management:** JWT with enhanced security
-- **API Protection:** Comprehensive endpoint security
-- **Audit Logging:** Complete security audit trail
-
-### Integration Points
-- **Authentication Layer:** Core security implementation
-- **API Gateway:** Centralized security controls
-- **Database Security:** Encrypted data storage
-- **Frontend Security:** Client-side security measures
-- **Real-time Monitoring:** Security event tracking
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-- Node.js 18+ 
-- PostgreSQL 14+
-- Docker (optional)
-- Git
-
-### Quick Start
-```bash
-# Clone the repository
-git clone <repository-url>
-cd LuxCore
-
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env
-
-# Start development servers
-npm run dev
-```
-
-### Environment Configuration
-Create a `.env` file with the following variables:
-```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/luxcore"
-
-# NovaSanctum Security
-NOVASANCTUM_SECRET="your-novas Sanctum-secret"
-JWT_SECRET="your-jwt-secret"
-
-# Server Configuration
-PORT=3000
-NODE_ENV=development
-
-# Frontend Configuration
-VITE_API_URL="http://localhost:3000/api"
+│   ├── public/              # Static assets
+│   └── src/
+│       ├── assets/          # Images, fonts, etc.
+│       ├── components/      # Reusable React components
+│       ├── contexts/        # React contexts
+│       ├── hooks/           # Custom React hooks
+│       ├── pages/           # Page components
+│       ├── services/        # API services
+│       ├── styles/          # Global styles
+│       ├── types/           # TypeScript type definitions
+│       └── utils/           # Utility functions
+├── .github/                 # GitHub configurations
+│   └── workflows/           # GitHub Actions workflows
+├── .vscode/                # VS Code settings
+├── docs/                    # Generated documentation
+└── scripts/                 # Utility scripts
 ```
 
 ## 📚 Documentation
 
-### Documentation Structure
-- **@docs/:** Source of truth for all project documentation
-- **@.cursor/:** Cursor-specific documentation and settings
-- **@memories.md:** Project progress and decision tracking
-- **@lessons-learned.md:** Development insights and best practices
-- **@scratchpad.md:** Temporary notes and ideas
+Comprehensive documentation is available at [docs.luxcore.dev](https://docs.luxcore.dev).
 
-### Quantum Documentation Features
-- **Real-time Updates:** Documentation synchronized with code changes
-- **Cross-referencing:** Linked documentation for continuity
-- **AI Maintenance:** Automated documentation updates
-- **Context Awareness:** Detailed explanations of system interactions
-- **Performance Tracking:** Documented performance considerations
+To run the documentation locally:
 
-## 🔧 Development
-
-### Available Scripts
 ```bash
-# Development
-npm run dev          # Start development servers
-npm run build        # Build for production
-npm run test         # Run tests
-npm run lint         # Lint code
-npm run format       # Format code
-
-# Database
-npm run db:migrate   # Run database migrations
-npm run db:seed      # Seed database
-npm run db:reset     # Reset database
-
-# Documentation
-npm run docs:generate # Generate documentation
-npm run docs:serve   # Serve documentation
+pnpm run docs:generate  # Generate documentation
+pnpm run docs:serve     # Serve documentation locally
 ```
-
-### Development Workflow
-1. **Feature Development:** Create feature branches
-2. **Documentation First:** Write documentation before implementation
-3. **Type Safety:** Maintain full TypeScript coverage
-4. **Testing:** Write comprehensive tests
-5. **Security Review:** Ensure NovaSanctum integration
-6. **Code Review:** Maintain high code quality
-7. **Deployment:** Automated deployment pipeline
-
-## 🔒 Security
-
-### NovaSanctum Security Implementation
-- **Authentication:** Multi-factor authentication
-- **Authorization:** Role-based access control
-- **Session Security:** Secure session management
-- **API Security:** Comprehensive endpoint protection
-- **Data Encryption:** Encrypted data storage
-- **Audit Logging:** Complete security audit trail
-
-### Security Best Practices
-- Regular security audits
-- Dependency vulnerability scanning
-- Secure coding practices
-- Environment variable management
-- HTTPS enforcement
-- CORS configuration
-
-## 🚀 Deployment
-
-### Production Deployment
-```bash
-# Build application
-npm run build
-
-# Deploy with Docker
-docker-compose up -d
-
-# Or deploy to Kubernetes
-kubectl apply -f infrastructure/kubernetes/
-```
-
-### Environment Configuration
-- **Development:** Local development setup
-- **Staging:** Pre-production testing
-- **Production:** Live application deployment
 
 ## 🤝 Contributing
 
-### Development Guidelines
-1. Follow TypeScript best practices
-2. Maintain quantum documentation
-3. Implement comprehensive testing
-4. Ensure NovaSanctum security integration
-5. Follow code review process
-6. Update documentation with changes
+We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
 
-### Code Standards
-- **TypeScript:** Strict type checking
-- **ESLint:** Code quality enforcement
-- **Prettier:** Code formatting
-- **Testing:** Comprehensive test coverage
-- **Documentation:** Quantum-level detail
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-For support and questions:
-- **Documentation:** Check the `@docs/` directory
-- **Issues:** Create an issue in the repository
-- **Security:** Report security issues privately
-
----
-
-## 🎯 Project Status
-
-**Current Phase:** Complete Project Refactor with NovaSanctum Integration  
-**Last Updated:** 2024-07-05  
-**Documentation Status:** Quantum-level maintained  
-**Security Status:** NovaSanctum integrated  
+- [NovaSanctum](https://novas Sanctum.dev) for the security framework
+- [Prisma](https://www.prisma.io/) for the amazing ORM
+- [Vite](https://vitejs.dev/) for the frontend tooling
+- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
 
 ---
 
-*Built with ❤️ and NovaSanctum Technology* 
+<div align="center">
+  Made with ❤️ by the LuxCore Team
+</div>
